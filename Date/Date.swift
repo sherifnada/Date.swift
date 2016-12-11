@@ -25,10 +25,10 @@ import Foundation
 
 // MARK: - Initializing with date components
 
-public extension NSDate {
+public extension Foundation.Date {
 
-    public convenience init(year: Int, month: Int, day: Int, hours: Int, minutes: Int, seconds: Double) {
-        let components = NSDateComponents()
+    public init(year: Int, month: Int, day: Int, hours: Int, minutes: Int, seconds: Double) {
+        var components = DateComponents()
         components.year = year
         components.month = month
         components.day = day
@@ -36,35 +36,36 @@ public extension NSDate {
         components.minute = minutes
         components.second = Int(seconds)
         components.nanosecond = Int((seconds - floor(seconds)) * 1_000_000_000)
-        let interval = NSCalendar.currentCalendar().dateFromComponents(components)?.timeIntervalSinceReferenceDate ?? 0
+        let interval = Calendar.current.date(from: components)?.timeIntervalSinceReferenceDate ?? 0
         self.init(timeIntervalSinceReferenceDate: interval)
+    
     }
 
-    public convenience init(year: Int, month: Int, day: Int) {
-        let components = NSDateComponents()
+    public init(year: Int, month: Int, day: Int) {
+        var components = DateComponents()
         components.year = year
         components.month = month
         components.day = day
-        let interval = NSCalendar.currentCalendar().dateFromComponents(components)?.timeIntervalSinceReferenceDate ?? 0
+        let interval = Calendar.current.date(from: components)?.timeIntervalSinceReferenceDate ?? 0
         self.init(timeIntervalSinceReferenceDate: interval)
     }
 
-    public convenience init(hours: Int, minutes: Int, seconds: Double) {
-        let components = NSDateComponents()
+    public init(hours: Int, minutes: Int, seconds: Double) {
+        var components = DateComponents()
         components.hour = hours
         components.minute = minutes
         components.second = Int(seconds)
         components.nanosecond = Int((seconds - floor(seconds)) * 1_000_000_000)
-        let interval = NSCalendar.currentCalendar().dateFromComponents(components)?.timeIntervalSinceReferenceDate ?? 0
+        let interval = Calendar.current.date(from: components)?.timeIntervalSinceReferenceDate ?? 0
         self.init(timeIntervalSinceReferenceDate: interval)
     }
 
-    public class func date(year: Int, _ month: Int, _ day: Int) -> NSDate {
-        return NSDate(year: year, month: month, day: day)
+    public static func date(_ year: Int, _ month: Int, _ day: Int) -> Foundation.Date {
+        return Foundation.Date(year: year, month: month, day: day)
     }
 
-    public class func time(hours: Int, _ minutes: Int, _ seconds: Double) -> NSDate {
-        return NSDate(hours: hours, minutes: minutes, seconds: seconds)
+    public static func time(_ hours: Int, _ minutes: Int, _ seconds: Double) -> Foundation.Date {
+        return Foundation.Date(hours: hours, minutes: minutes, seconds: seconds)
     }
 
 }
@@ -72,14 +73,14 @@ public extension NSDate {
 
 // MARK: - Extracting date
 
-public extension NSDate {
+public extension Foundation.Date {
 
-    public var date: NSDate {
-        return NSDate(year: self.year, month: self.month, day: self.day)
+    public var date: Foundation.Date {
+        return Foundation.Date(year: self.year, month: self.month, day: self.day)
     }
 
-    public class var today: NSDate {
-        return NSDate().date
+    public static var today: Foundation.Date {
+        return Foundation.Date().date
     }
 
 }
@@ -87,52 +88,52 @@ public extension NSDate {
 
 // MARK: - Setter and getters for date components
 
-public extension NSDate {
+public extension Foundation.Date {
 
-    public var year: Int { return self.components(.Year).year }
-    public var month: Int { return self.components(.Month).month }
-    public var day: Int { return self.components(.Day).day }
-    public var hours: Int { return self.components(.Hour).hour }
-    public var minutes: Int { return self.components(.Minute).minute }
+    public var year: Int { return self.components(.year).year! }
+    public var month: Int { return self.components(.month).month! }
+    public var day: Int { return self.components(.day).day! }
+    public var hours: Int { return self.components(.hour).hour! }
+    public var minutes: Int { return self.components(.minute).minute! }
     public var seconds: Double {
-        let components = self.components([.Second, .Nanosecond])
-        return Double(components.second) + Double(components.nanosecond) / 1_000_000_000
+        let components = self.components([.second, .nanosecond])
+        return Double(components.second!) + Double(components.nanosecond!) / 1_000_000_000
     }
-    public var weekday: Int { return self.components(.Weekday).weekday }
+    public var weekday: Int { return self.components(.weekday).weekday! }
 
-    public func withYear(year: Int) -> NSDate {
-        return NSDate(year: year, month: month, day: day, hours: hours, minutes: minutes, seconds: seconds)
-    }
-
-    public func withMonth(month: Int) -> NSDate {
-        return NSDate(year: year, month: month, day: day, hours: hours, minutes: minutes, seconds: seconds)
+    public func withYear(_ year: Int) -> Foundation.Date {
+        return Foundation.Date(year: year, month: month, day: day, hours: hours, minutes: minutes, seconds: seconds)
     }
 
-    public func withDay(day: Int) -> NSDate {
-        return NSDate(year: year, month: month, day: day, hours: hours, minutes: minutes, seconds: seconds)
+    public func withMonth(_ month: Int) -> Foundation.Date {
+        return Foundation.Date(year: year, month: month, day: day, hours: hours, minutes: minutes, seconds: seconds)
     }
 
-    public func withHours(hours: Int) -> NSDate {
-        return NSDate(year: year, month: month, day: day, hours: hours, minutes: minutes, seconds: seconds)
+    public func withDay(_ day: Int) -> Foundation.Date {
+        return Foundation.Date(year: year, month: month, day: day, hours: hours, minutes: minutes, seconds: seconds)
     }
 
-    public func withMinutes(minutes: Int) -> NSDate {
-        return NSDate(year: year, month: month, day: day, hours: hours, minutes: minutes, seconds: seconds)
+    public func withHours(_ hours: Int) -> Foundation.Date {
+        return Foundation.Date(year: year, month: month, day: day, hours: hours, minutes: minutes, seconds: seconds)
     }
 
-    public func withSeconds(seconds: Double) -> NSDate {
-        return NSDate(year: year, month: month, day: day, hours: hours, minutes: minutes, seconds: seconds)
+    public func withMinutes(_ minutes: Int) -> Foundation.Date {
+        return Foundation.Date(year: year, month: month, day: day, hours: hours, minutes: minutes, seconds: seconds)
     }
 
-    public func withWeekday(weekday: Int) -> NSDate! {
-        let calendar = NSCalendar.currentCalendar()
-        let components = calendar.components([.Year, .Month, .Day, .Weekday], fromDate: self)
-        components.day += weekday - components.weekday
-        return calendar.dateFromComponents(components)!
+    public func withSeconds(_ seconds: Double) -> Foundation.Date {
+        return Foundation.Date(year: year, month: month, day: day, hours: hours, minutes: minutes, seconds: seconds)
     }
 
-    private func components(units: NSCalendarUnit) -> NSDateComponents {
-        return NSCalendar.currentCalendar().components(units, fromDate: self)
+    public func withWeekday(_ weekday: Int) -> Foundation.Date! {
+        let calendar = Calendar.current
+        var components = calendar.dateComponents([.year, .month, .day, .weekday], from: self)
+        components.day = components.day! + (weekday - components.weekday!)
+        return calendar.date(from: components)!
+    }
+
+    fileprivate func components(_ units: NSCalendar.Unit) -> DateComponents {
+        return (Calendar.current as NSCalendar).components(units, from: self)
     }
 
 }
@@ -142,13 +143,13 @@ public extension NSDate {
 
 public extension IntegerLiteralType {
 
-    public var years: _DateTimeDelta { return _DateTimeDelta(self, .Year) }
-    public var months: _DateTimeDelta { return _DateTimeDelta(self, .Month) }
-    public var days: _DateTimeDelta { return _DateTimeDelta(self, .Day) }
+    public var years: _DateTimeDelta { return _DateTimeDelta(self, .year) }
+    public var months: _DateTimeDelta { return _DateTimeDelta(self, .month) }
+    public var days: _DateTimeDelta { return _DateTimeDelta(self, .day) }
 
-    public var hours: _DateTimeDelta { return _DateTimeDelta(self, .Hour) }
-    public var minutes: _DateTimeDelta { return _DateTimeDelta(self, .Minute)  }
-    public var seconds: _DateTimeDelta { return _DateTimeDelta(self, .Second) }
+    public var hours: _DateTimeDelta { return _DateTimeDelta(self, .hour) }
+    public var minutes: _DateTimeDelta { return _DateTimeDelta(self, .minute)  }
+    public var seconds: _DateTimeDelta { return _DateTimeDelta(self, .second) }
 
     public var year: _DateTimeDelta { return self.years }
     public var month: _DateTimeDelta { return self.months }
@@ -162,89 +163,89 @@ public extension IntegerLiteralType {
 
 public extension FloatLiteralType {
 
-    public var seconds: _DateTimeDelta { return _DateTimeDelta(self, .Second) }
+    public var seconds: _DateTimeDelta { return _DateTimeDelta(self, .second) }
     public var second: _DateTimeDelta { return self.seconds }
 
 }
 
 public struct _DateTimeDelta {
 
-    public var value: NSTimeInterval
-    public var unit: NSCalendarUnit
+    public var value: TimeInterval
+    public var unit: Calendar.Component
 
-    public init(_ value: NSTimeInterval, _ unit: NSCalendarUnit) {
+    public init(_ value: TimeInterval, _ unit: Calendar.Component) {
         self.value = value
         self.unit = unit
     }
 
-    public init(_ value: IntegerLiteralType, _ unit: NSCalendarUnit) {
-        self.init(NSTimeInterval(value), unit)
+    public init(_ value: IntegerLiteralType, _ unit: Calendar.Component) {
+        self.init(TimeInterval(value), unit)
     }
 
-    private var negativeDelta: _DateTimeDelta {
-        return self.dynamicType.init(-self.value, self.unit)
+    fileprivate var negativeDelta: _DateTimeDelta {
+        return type(of: self).init(-self.value, self.unit)
     }
 
 
-    public func after(date: NSDate) -> NSDate {
+    public func after(_ date: Foundation.Date) -> Foundation.Date {
         switch self.unit {
-        case NSCalendarUnit.Year: return date.withYear(date.year + Int(self.value))
-        case NSCalendarUnit.Month: return date.withMonth(date.month + Int(self.value))
-        case NSCalendarUnit.Day: return date.withDay(date.day + Int(self.value))
-        case NSCalendarUnit.Hour: return date.withHours(date.hours + Int(self.value))
-        case NSCalendarUnit.Minute: return date.withMinutes(date.minutes + Int(self.value))
-        case NSCalendarUnit.Second: return date.withSeconds(date.seconds + self.value)
+        case Calendar.Component.year: return date.withYear(date.year + Int(self.value))
+        case Calendar.Component.month: return date.withMonth(date.month + Int(self.value))
+        case Calendar.Component.day: return date.withDay(date.day + Int(self.value))
+        case Calendar.Component.hour: return date.withHours(date.hours + Int(self.value))
+        case Calendar.Component.minute: return date.withMinutes(date.minutes + Int(self.value))
+        case Calendar.Component.second: return date.withSeconds(date.seconds + self.value)
         default: return date
         }
     }
 
-    public func before(date: NSDate) -> NSDate {
+    public func before(_ date: Foundation.Date) -> Foundation.Date {
         return self.negativeDelta.after(date)
     }
 
-    public var fromNow: NSDate {
-        return self.after(NSDate())
+    public var fromNow: Foundation.Date {
+        return self.after(Foundation.Date())
     }
 
-    public var ago: NSDate {
+    public var ago: Foundation.Date {
         return self.negativeDelta.fromNow
     }
 
 }
 
-public func + (date: NSDate, delta: _DateTimeDelta) -> NSDate { return delta.after(date) }
-public func + (delta: _DateTimeDelta, date: NSDate) -> NSDate { return delta.after(date) }
-public func - (date: NSDate, delta: _DateTimeDelta) -> NSDate { return delta.before(date) }
+public func + (date: Foundation.Date, delta: _DateTimeDelta) -> Foundation.Date { return delta.after(date) }
+public func + (delta: _DateTimeDelta, date: Foundation.Date) -> Foundation.Date { return delta.after(date) }
+public func - (date: Foundation.Date, delta: _DateTimeDelta) -> Foundation.Date { return delta.before(date) }
 
 
 // MARK: - Calendar
 
-public extension NSDate {
+public extension Foundation.Date {
 
-    public class var january: NSDate { return NSDate.today.withMonth(1).withDay(1) }
-    public class var february: NSDate { return NSDate.today.withMonth(2).withDay(1) }
-    public class var march: NSDate { return NSDate.today.withMonth(3).withDay(1) }
-    public class var april: NSDate { return NSDate.today.withMonth(4).withDay(1) }
-    public class var may: NSDate { return NSDate.today.withMonth(5).withDay(1) }
-    public class var june: NSDate { return NSDate.today.withMonth(6).withDay(1) }
-    public class var july: NSDate { return NSDate.today.withMonth(7).withDay(1) }
-    public class var august: NSDate { return NSDate.today.withMonth(8).withDay(1) }
-    public class var september: NSDate { return NSDate.today.withMonth(9).withDay(1) }
-    public class var october: NSDate { return NSDate.today.withMonth(10).withDay(1) }
-    public class var november: NSDate { return NSDate.today.withMonth(11).withDay(1) }
-    public class var december: NSDate { return NSDate.today.withMonth(12).withDay(1) }
+    public static var january: Foundation.Date { return Foundation.Date.today.withMonth(1).withDay(1) }
+    public static var february: Foundation.Date { return Foundation.Date.today.withMonth(2).withDay(1) }
+    public static var march: Foundation.Date { return Foundation.Date.today.withMonth(3).withDay(1) }
+    public static var april: Foundation.Date { return Foundation.Date.today.withMonth(4).withDay(1) }
+    public static var may: Foundation.Date { return Foundation.Date.today.withMonth(5).withDay(1) }
+    public static var june: Foundation.Date { return Foundation.Date.today.withMonth(6).withDay(1) }
+    public static var july: Foundation.Date { return Foundation.Date.today.withMonth(7).withDay(1) }
+    public static var august: Foundation.Date { return Foundation.Date.today.withMonth(8).withDay(1) }
+    public static var september: Foundation.Date { return Foundation.Date.today.withMonth(9).withDay(1) }
+    public static var october: Foundation.Date { return Foundation.Date.today.withMonth(10).withDay(1) }
+    public static var november: Foundation.Date { return Foundation.Date.today.withMonth(11).withDay(1) }
+    public static var december: Foundation.Date { return Foundation.Date.today.withMonth(12).withDay(1) }
 
-    public class var jan: NSDate { return self.january }
-    public class var feb: NSDate { return self.february }
-    public class var mar: NSDate { return self.march }
-    public class var apr: NSDate { return self.april }
-    public class var jun: NSDate { return self.june }
-    public class var jul: NSDate { return self.july }
-    public class var aug: NSDate { return self.august }
-    public class var sep: NSDate { return self.september }
-    public class var oct: NSDate { return self.october }
-    public class var nov: NSDate { return self.november }
-    public class var dec: NSDate { return self.december }
+    public static var jan: Foundation.Date { return self.january }
+    public static var feb: Foundation.Date { return self.february }
+    public static var mar: Foundation.Date { return self.march }
+    public static var apr: Foundation.Date { return self.april }
+    public static var jun: Foundation.Date { return self.june }
+    public static var jul: Foundation.Date { return self.july }
+    public static var aug: Foundation.Date { return self.august }
+    public static var sep: Foundation.Date { return self.september }
+    public static var oct: Foundation.Date { return self.october }
+    public static var nov: Foundation.Date { return self.november }
+    public static var dec: Foundation.Date { return self.december }
 
     public var first: _CalendarDelta { return self.calendarDelta(0) }
     public var second: _CalendarDelta { return self.calendarDelta(1) }
@@ -253,50 +254,50 @@ public extension NSDate {
     public var fifth: _CalendarDelta { return self.calendarDelta(4) }
     public var last: _CalendarDelta { return self.calendarDelta(-1) }
 
-    private func calendarDelta(ordinal: Int) -> _CalendarDelta {
+    fileprivate func calendarDelta(_ ordinal: Int) -> _CalendarDelta {
         return _CalendarDelta(date: self, ordinal: ordinal)
     }
 
 
-    public class var sunday: NSDate? { return NSDate.today.withWeekday(1) }
-    public class var monday: NSDate? { return NSDate.today.withWeekday(2) }
-    public class var tuesday: NSDate? { return NSDate.today.withWeekday(3) }
-    public class var wednesday: NSDate? { return NSDate.today.withWeekday(4) }
-    public class var thursday: NSDate? { return NSDate.today.withWeekday(5) }
-    public class var friday: NSDate? { return NSDate.today.withWeekday(6) }
-    public class var saturday: NSDate? { return NSDate.today.withWeekday(7) }
+    public static var sunday: Foundation.Date? { return Foundation.Date.today.withWeekday(1) }
+    public static var monday: Foundation.Date? { return Foundation.Date.today.withWeekday(2) }
+    public static var tuesday: Foundation.Date? { return Foundation.Date.today.withWeekday(3) }
+    public static var wednesday: Foundation.Date? { return Foundation.Date.today.withWeekday(4) }
+    public static var thursday: Foundation.Date? { return Foundation.Date.today.withWeekday(5) }
+    public static var friday: Foundation.Date? { return Foundation.Date.today.withWeekday(6) }
+    public static var saturday: Foundation.Date? { return Foundation.Date.today.withWeekday(7) }
 
 }
 
 public struct _CalendarDelta {
 
-    public var date: NSDate
+    public var date: Foundation.Date
 
     /// `0` for first and `-1` for last
     public var ordinal: Int
 
-    public var sunday: NSDate? { return self.weekday(1) }
-    public var monday: NSDate? { return self.weekday(2) }
-    public var tuesday: NSDate? { return self.weekday(3) }
-    public var wednesday: NSDate? { return self.weekday(4) }
-    public var thursday: NSDate? { return self.weekday(5) }
-    public var friday: NSDate? { return self.weekday(6) }
-    public var saturday: NSDate? { return self.weekday(7) }
+    public var sunday: Foundation.Date? { return self.weekday(1) }
+    public var monday: Foundation.Date? { return self.weekday(2) }
+    public var tuesday: Foundation.Date? { return self.weekday(3) }
+    public var wednesday: Foundation.Date? { return self.weekday(4) }
+    public var thursday: Foundation.Date? { return self.weekday(5) }
+    public var friday: Foundation.Date? { return self.weekday(6) }
+    public var saturday: Foundation.Date? { return self.weekday(7) }
 
-    private func weekday(weekday: Int) -> NSDate? {
+    fileprivate func weekday(_ weekday: Int) -> Foundation.Date? {
         if self.ordinal == -1 {
-            for i in (1...5).reverse() {
+            for i in (1...5).reversed() {
                 if let date = _CalendarDelta(date: self.date, ordinal: i).weekday(weekday) {
                     return date
                 }
             }
             return nil
         }
-        let calendar = NSCalendar.currentCalendar()
-        let components = calendar.components([.Year, .Month, .Day, .Weekday], fromDate: self.date)
-        let ordinal = (weekday >= components.weekday) ? self.ordinal : self.ordinal + 1
-        components.day += weekday + 7 * ordinal - components.weekday
-        if let date = calendar.dateFromComponents(components) where date.month == components.month {
+        let calendar = Calendar.current
+        var components = (calendar as NSCalendar).components([.year, .month, .day, .weekday], from: self.date)
+        let ordinal = (weekday >= components.weekday!) ? self.ordinal : self.ordinal + 1
+        components.day = components.day! + weekday + 7 * ordinal - components.weekday!
+        if let date = calendar.date(from: components), date.month == components.month {
             return date
         }
         return nil
